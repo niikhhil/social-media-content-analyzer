@@ -1,0 +1,171 @@
+/* General Body Styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f7f9;
+  color: #333;
+}
+
+/* Main App Container */
+.app-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* Dropzone Styles */
+.dropzone {
+  border: 2px dashed #007bff;
+  border-radius: 10px;
+  padding: 40px 20px;
+  background-color: #ffffff;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dropzone p {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.dropzone em {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.dropzone .file-info {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.dropzone.active {
+  background-color: #e9f5ff;
+  border-color: #0056b3;
+}
+
+.dropzone.disabled {
+  cursor: not-allowed;
+  background-color: #e9ecef;
+  opacity: 0.7;
+}
+
+/* Upload Button Section */
+.upload-section {
+  margin-top: 20px;
+}
+
+.upload-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: #218838;
+}
+
+/* Spinner Styles */
+.spinner-container {
+  margin: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Message Styles */
+.error-message, .success-message {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Results Display */
+.results-container {
+  margin-top: 40px;
+  text-align: left;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.result-section {
+  margin-bottom: 25px;
+}
+.result-section:last-child {
+  margin-bottom: 0;
+}
+
+.result-section h2 {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.extracted-text-box, .suggestions-box {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  white-space: pre-wrap; /* Ensures text wraps */
+  word-wrap: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.suggestions-box {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+}
