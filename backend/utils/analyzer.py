@@ -17,10 +17,14 @@ def analyze_text_with_gemini(text):
         
         genai.configure(api_key=api_key)
 
-        # Define the prompt for the model
+        # prompt to gemini for asking the suggestion
         prompt = f"""
-        Analyze the following social media post and provide 3-4 actionable suggestions to improve its engagement. 
-        Focus on clarity, tone, calls-to-action, and use of hashtags. Format the output as a simple, easy-to-read list.
+        Analyze the following social media post. Provide 3-4 actionable suggestions to improve its engagement.
+        
+        Format the output using Markdown. For each suggestion, use a bolded heading followed by a brief explanation.
+        For example:
+        **Clarity:** Your message could be clearer. Try shortening your sentences.
+        **Call to Action:** Add a question at the end to encourage comments.
 
         Post:
         ---
@@ -30,7 +34,6 @@ def analyze_text_with_gemini(text):
         Suggestions:
         """
 
-        # --- THIS IS THE FIX ---
         # Use a current and supported model name
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
@@ -40,5 +43,5 @@ def analyze_text_with_gemini(text):
 
     except Exception as e:
         print(f"An error occurred with the Gemini API: {e}")
-        # Return a user-friendly error message
+        # Return error message
         return "Sorry, the analysis could not be completed at this time."

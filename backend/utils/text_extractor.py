@@ -7,12 +7,8 @@ def extract_text_from_pdf(file_stream):
     """Extracts text from a PDF file stream."""
     text = ""
     try:
-        # Read the entire file stream into a bytes object first
         pdf_bytes = file_stream.read()
-        
-        # Now, open the PDF from the bytes object
         pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-        
         for page_num in range(len(pdf_document)):
             page = pdf_document.load_page(page_num)
             text += page.get_text()
@@ -23,19 +19,23 @@ def extract_text_from_pdf(file_stream):
     return text
 
 def extract_text_from_image(file_stream):
-    """Extracts text from an image file stream using OCR."""
+    """
+    Pre-processes an image and then extracts text using OCR for better accuracy.
+    """
     try:
-        # Read the stream into an in-memory bytes buffer
         image_bytes = file_stream.read()
         image = Image.open(io.BytesIO(image_bytes))
-        
+
         # --- THIS IS THE FIX ---
-        # PSM 4 assumes a single column of text of variable sizes.
-        # This can be more effective for images with distinct text blocks.
-        custom_config = r'--psm 4'
+        # 1. Pre-process the image: Convert to grayscale
+        processed_image = image.convert('L')
+
+        # 2. Use the most versatile Page Segmentation Mode (PSM)
+        # PSM 3 is the default and fully automatic, which is best for varied layouts.
+        custom_config = r'--psm 3'
         
-        # Use Tesseract to extract text from the image with the new config
-        text = pytesseract.image_to_string(image, config=custom_config)
+        # 3. Perform OCR on the processed image
+        text = pytesseract.image_to_string(processed_image, config=custom_config)
     except Exception as e:
         print(f"Error processing image with OCR: {e}")
         raise ValueError("Could not process the image file.")
@@ -43,8 +43,8 @@ def extract_text_from_image(file_stream):
 
 def extract_text_from_file(file):
     """
-    Extracts text from a file by determining its type (PDF or image)
-    and calling the appropriate extraction function.
+    Extracts text from a file by determining its type and calling the
+    appropriate extraction function.
     """
     file_extension = file.filename.rsplit('.', 1)[1].lower()
     
@@ -54,4 +54,3 @@ def extract_text_from_file(file):
         return extract_text_from_image(file.stream)
     else:
         raise ValueError("Unsupported file type.")
-
