@@ -1,13 +1,20 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
 from utils.text_extractor import extract_text_from_file
-from utils.analyzer import analyze_text_with_gemini # Import the new analyzer function
+from utils.analyzer import analyze_text_with_gemini
 import pytesseract
 
-# --- Tesseract Path Configuration ---
-# Update this path to where you installed Tesseract OCR on your local machine.
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-# ------------------------------------
+# Load environment variables from .env file
+load_dotenv()
+
+# --- Configuration Management ---
+# Load the Tesseract path from the .env file
+tesseract_path = os.getenv("TESSERACT_CMD_PATH")
+if tesseract_path:
+    pytesseract.pytesseract.tesseract_cmd = tesseract_path
+# --------------------------------
 
 app = Flask(__name__)
 CORS(app)
@@ -44,7 +51,7 @@ def extract_text():
 @app.route('/api/analyze', methods=['POST'])
 def analyze_text_endpoint():
     """
-    New endpoint to receive text and return engagement suggestions from Gemini.
+    Endpoint to receive text and return engagement suggestions from Gemini.
     """
     data = request.get_json()
     if not data or 'text' not in data:
