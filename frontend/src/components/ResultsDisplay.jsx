@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-function ResultsDisplay({ extractedText, suggestions }) {
+function ResultsDisplay({ suggestions }) {
+  const [copySuccess, setCopySuccess] = useState('');
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(suggestions).then(() => {
+      setCopySuccess('Copied!');
+      setTimeout(() => setCopySuccess(''), 2000); // Hide message after 2 seconds
+    }, () => {
+      setCopySuccess('Failed to copy');
+      setTimeout(() => setCopySuccess(''), 2000);
+    });
+  };
+
   return (
     <div className="results-container">
       {suggestions && (
         <div className="result-section">
-          <h2>Engagement Suggestions</h2>
-          {/* Use a <pre> tag to preserve formatting from the API response */}
-          <pre className="suggestions-box">{suggestions}</pre>
-        </div>
-      )}
-      {extractedText && (
-        <div className="result-section">
-          <h2>Extracted Text</h2>
-          <pre className="extracted-text-box">{extractedText}</pre>
+          <div className="result-header">
+            <h2>Engagement Suggestions</h2>
+            <button onClick={handleCopy} className="copy-btn">
+              {copySuccess || 'Copy'}
+            </button>
+          </div>
+          <div className="suggestions-box">
+            <ReactMarkdown>{suggestions}</ReactMarkdown>
+          </div>
         </div>
       )}
     </div>

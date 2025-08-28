@@ -1,90 +1,105 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAnalysis } from './hooks/useAnalysis'; // Corrected import path
+import AnimatedHeader from './components/AnimatedHeader';
 import FileUpload from './components/FileUpload';
 import ResultsDisplay from './components/ResultsDisplay';
 import Spinner from './components/Spinner';
+import Footer from './components/Footer';
+import ThemeSwitcher from './components/ThemeSwitcher';
 import './styles.css';
 
 function App() {
-  const [extractedText, setExtractedText] = useState('');
-  const [suggestions, setSuggestions] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [theme, setTheme] = useState('light');
+  
+  // 2. Use the custom hook to get all state and handlers
+  const {
+    suggestions,
+    isLoading,
+    error,
+    selectedFile,
+    uploadSuccess,
+    handleFileSelect,
+    handleUpload,
+  } = useAnalysis();
 
-  const handleFileSelect = (file) => {
-    setSelectedFile(file);
-    setError('');
-    setExtractedText('');
-    setSuggestions('');
-    setUploadSuccess(false);
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) return;
-
-    setIsLoading(true);
-    setError('');
-    setUploadSuccess(false);
-
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    try {
-      // --- Step 1: Extract Text ---
-      const extractResponse = await axios.post('http://127.0.0.1:5000/api/extract', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      
-      const text = extractResponse.data.extracted_text;
-      setExtractedText(text);
-
-      // --- Step 2: Analyze Text ---
-      const analyzeResponse = await axios.post('http://127.0.0.1:5000/api/analyze', {
-        text: text,
-      });
-
-      setSuggestions(analyzeResponse.data.suggestions);
-      setUploadSuccess(true);
-      setSelectedFile(null);
-
-    } catch (err) {
-      const errorMessage = err.response ? err.response.data.error : 'An unexpected error occurred.';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    document.body.className = '';
+    document.body.classList.add(`${theme}-theme`);
+  }, [theme]);
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>Social Media Content Analyzer 🚀</h1>
-        <p>Upload a document (PDF or image) to extract text and get engagement tips.</p>
-      </header>
+      <ThemeSwitcher theme={theme} toggleTheme={toggleTheme} />
+      <AnimatedHeader />
       <main>
         <FileUpload onFileSelect={handleFileSelect} selectedFile={selectedFile} disabled={isLoading} />
         
-        {selectedFile && !isLoading && (
-          <div className="upload-section">
-            <button onClick={handleUpload} className="upload-btn">
-              Upload and Analyze
-            </button>
-          </div>
-        )}
+        <AnimatePresence>
+          {selectedFile && !isLoading && (
+            <motion.div
+              className="upload-section"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+            >
+              <motion.button 
+                onClick={handleUpload} 
+                className="upload-btn"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Upload and Analyze
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {isLoading && <Spinner />}
-        {uploadSuccess && !error && <div className="success-message">File analyzed successfully! Results below.</div>}
-        {error && <div className="error-message">{error}</div>}
         
-        {(extractedText || suggestions) && (
-          <ResultsDisplay 
-            extractedText={extractedText} 
-            suggestions={suggestions} 
-          />
-        )}
+        <AnimatePresence>
+          {uploadSuccess && !error && (
+            <motion.div 
+              className="success-message"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              File analyzed successfully! Results below.
+            </motion.div>
+          )}
+          {error && (
+             <motion.div 
+              className="error-message"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <AnimatePresence>
+          {suggestions && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <ResultsDisplay 
+                suggestions={suggestions} 
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
+      <Footer />
     </div>
   );
 }
