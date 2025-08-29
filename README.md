@@ -120,5 +120,5 @@ The backend is a lightweight Flask API that handles the core logic. I created mo
 
 ## 📬 Contact
 
--   **Name:** [Your Name]
--   **Email:** [your.email@example.com]
+-   **Name:** Nikhil Yadav
+-   **Email:** nikhilyadav9305@gmail.com
