@@ -2,7 +2,7 @@
 
 A web application that extracts text from uploaded documents (PDFs and images) and uses AI to generate suggestions for improving social media engagement.
 
-**Live Application URL:** [Link to your deployed application]
+**Live Application URL:** https://social-media-content-analyzer-eight.vercel.app/
 
 ---
 
@@ -41,8 +41,8 @@ This project is a full-stack web application designed as a technical assessment 
     -   `Pytesseract` & `Pillow` for OCR
     -   `google-generativeai` for AI analysis
 -   **Deployment:**
-    -   **Frontend:** Vercel / Netlify
-    -   **Backend:** Render / Heroku
+    -   **Frontend:** Vercel 
+    -   **Backend:** Render 
 
 ---
 
@@ -103,7 +103,7 @@ TESSERACT_CMD_PATH="C:\Program Files\Tesseract-OCR\tesseract.exe" # Update with 
 ### Frontend (`frontend/.env.development`)
 
 ```
-VITE_API_BASE_URL=[http://127.0.0.1:5000/api](http://127.0.0.1:5000/api)
+VITE_API_BASE_URL= http://127.0.0.1:5000/api
 ```
 
 ---
