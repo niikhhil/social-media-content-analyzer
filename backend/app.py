@@ -11,18 +11,16 @@ from utils.analyzer import analyze_content_with_gemini, analyze_image_with_gemin
 # Load environment variables from the .env file
 load_dotenv()
 
-# --- Configuration Management ---
 # Load the Tesseract path from the .env file for local development
 tesseract_path = os.getenv("TESSERACT_CMD_PATH")
 if tesseract_path:
     pytesseract.pytesseract.tesseract_cmd = tesseract_path
-# --------------------------------
+
 
 # Initialize the Flask app
 app = Flask(__name__)
 
-
-# It tells your backend to accept requests from your Vercel frontend.
+# CORS Configuration for Production 
 CORS(app, resources={
     r"/api/*": {
         "origins": [
@@ -33,40 +31,29 @@ CORS(app, resources={
 })
 
 
-
-# --- API Endpoints ---
+# API Endpoints
 
 @app.route('/api/extract', methods=['POST'])
 def extract_text_endpoint():
     if 'file' not in request.files:
         return jsonify({"error": "No file part in the request"}), 400
-
     file = request.files['file']
-
     if file.filename == '':
         return jsonify({"error": "No file selected"}), 400
-
     try:
         extracted_text = handle_file_upload(file)
         return jsonify({"extracted_text": extracted_text})
     except Exception as e:
-        # Log the error for debugging
         print(f"An unexpected error occurred during extraction: {e}")
         return jsonify({"error": f"An unexpected error occurred during extraction: {e}"}), 500
 
 
 @app.route('/api/analyze', methods=['POST'])
 def analyze_content_endpoint():
-    """
-    Endpoint to analyze content (text or image) and provide suggestions.
-    """
-    # Check if the request is multipart/form-data (contains a file)
     if 'file' in request.files:
         text = request.form.get('text', '')
         file = request.files['file']
-        
-        # If OCR text is poor, use image analysis. Otherwise, use text analysis.
-        if len(text.strip()) < 20: # Threshold for "poor" OCR
+        if len(text.strip()) < 20:
             try:
                 suggestions = analyze_image_with_gemini(file, text)
                 return jsonify({"suggestions": suggestions})
@@ -74,20 +61,16 @@ def analyze_content_endpoint():
                 print(f"An error occurred with the Gemini API (image analysis): {e}")
                 return jsonify({"error": f"An error occurred with the Gemini API: {e}"}), 500
         else:
-             # Fallback to text analysis even if a file is present
             try:
                 suggestions = analyze_content_with_gemini(text)
                 return jsonify({"suggestions": suggestions})
             except Exception as e:
                 print(f"An error occurred with the Gemini API (text analysis): {e}")
                 return jsonify({"error": f"An error occurred with the Gemini API: {e}"}), 500
-
-    # Handle JSON requests (text only)
     else:
         data = request.get_json()
         if not data or 'text' not in data:
             return jsonify({"error": "Missing text in request body"}), 400
-        
         text = data['text']
         try:
             suggestions = analyze_content_with_gemini(text)
@@ -95,7 +78,6 @@ def analyze_content_endpoint():
         except Exception as e:
             print(f"An error occurred with the Gemini API (JSON request): {e}")
             return jsonify({"error": f"An error occurred with the Gemini API: {e}"}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True)
