@@ -53,7 +53,7 @@ To run this project locally, you will need to have **Node.js**, **Python**, and 
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/social-media-content-analyzer.git](https://github.com/your-username/social-media-content-analyzer.git)
+git clone (https://github.com/niikhhil/social-media-content-analyzer.git)
 cd social-media-content-analyzer
 ```
 
