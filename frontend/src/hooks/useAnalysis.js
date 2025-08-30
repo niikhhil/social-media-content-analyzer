@@ -1,18 +1,25 @@
 import { useState } from 'react';
-import { extractText, analyzeText } from '../services/api';
+import { extractText, analyzeContent } from '../services/api';
 
 export const useAnalysis = () => {
   const [suggestions, setSuggestions] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleFileSelect = (file) => {
     setSelectedFile(file);
     setError('');
     setSuggestions('');
-    setUploadSuccess(false);
+    
+    // Create image preview if the file is an image
+    if (file && file.type.startsWith('image/')) {
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    } else {
+      setImagePreview(null);
+    }
   };
 
   const handleUpload = async () => {
@@ -21,15 +28,17 @@ export const useAnalysis = () => {
     setIsLoading(true);
     setError('');
     setSuggestions('');
-    setUploadSuccess(false);
 
     try {
-      const textToAnalyze = await extractText(selectedFile);
-      const analysisSuggestions = await analyzeText(textToAnalyze);
+      // Step 1: Extract text from the file
+      const extractResponse = await extractText(selectedFile);
+      const text = extractResponse.extracted_text;
+      
+      // Step 2: Send the extracted text AND the original file for analysis
+      const analyzeResponse = await analyzeContent(text, selectedFile);
 
-      setSuggestions(analysisSuggestions);
-      setUploadSuccess(true);
-      setSelectedFile(null);
+      setSuggestions(analyzeResponse.suggestions);
+
     } catch (err) {
       const errorMessage = err.response ? err.response.data.error : 'An unexpected error occurred.';
       setError(errorMessage);
@@ -43,7 +52,7 @@ export const useAnalysis = () => {
     isLoading,
     error,
     selectedFile,
-    uploadSuccess,
+    imagePreview,
     handleFileSelect,
     handleUpload,
   };

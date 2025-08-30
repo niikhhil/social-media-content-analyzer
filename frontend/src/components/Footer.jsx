@@ -1,8 +1,7 @@
 import React from 'react';
 
 function Footer() {
-  // --- IMPORTANT ---
-  // Replace "Your Name" and "your.email@example.com" with your actual details.
+  
   const yourName = "Nikhil Yadav";
   const yourEmail = "nikhilyadav9305@gmail.com";
   const currentYear = new Date().getFullYear();

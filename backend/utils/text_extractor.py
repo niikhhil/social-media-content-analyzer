@@ -4,7 +4,6 @@ import pytesseract
 import io
 
 def extract_text_from_pdf(file_stream):
-    """Extracts text from a PDF file stream."""
     text = ""
     try:
         pdf_bytes = file_stream.read()
@@ -19,14 +18,12 @@ def extract_text_from_pdf(file_stream):
     return text
 
 def extract_text_from_image(file_stream):
-    """
-    Pre-processes an image and then extracts text using OCR for better accuracy.
-    """
+    #Pre-processes an image and then extracts text using OCR for better accuracy.
+    
     try:
         image_bytes = file_stream.read()
         image = Image.open(io.BytesIO(image_bytes))
 
-        # --- THIS IS THE FIX ---
         # 1. Pre-process the image: Convert to grayscale
         processed_image = image.convert('L')
 
@@ -42,10 +39,8 @@ def extract_text_from_image(file_stream):
     return text
 
 def extract_text_from_file(file):
-    """
-    Extracts text from a file by determining its type and calling the
-    appropriate extraction function.
-    """
+    
+    # Extracts text from a file by determining its type 
     file_extension = file.filename.rsplit('.', 1)[1].lower()
     
     if file_extension == 'pdf':

@@ -13,7 +13,6 @@ function AnimatedHeader() {
           wrapper="span"
           speed={50}
           cursor={true} // The cursor will remain after typing
-          // The repeat={Infinity} prop has been removed
         />
       </h1>
       <p>Upload a document (PDF or image) to extract text and get engagement tips.</p>

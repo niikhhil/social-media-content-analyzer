@@ -38,9 +38,9 @@ function FileUpload({ onFileSelect, selectedFile, disabled, imagePreview }) {
         ) : isDragActive ? (
           <p>Drop the file here ...</p>
         ) : (
-          <p>Drag 'n' drop a file here, or click to select a file</p>
+          <p>Drag 'and' drop a file here, or click to select a file</p>
         )}
-        <em>(Only *.jpeg, *.png, and *.pdf files will be accepted)</em>
+        <em>(Only .jpeg, .png, and .pdf files will be accepted)</em>
       </div>
     </motion.div>
   );
