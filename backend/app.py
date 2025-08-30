@@ -25,7 +25,7 @@ CORS(app, resources={
     r"/api/*": {
         "origins": [
             "http://localhost:5173",  # For local development
-            "https://social-media-content-analyzer-h634h7v6m.vercel.app" # Your deployed frontend URL
+            "https://social-media-content-analyzer-h634h7v6m.vercel.app/" # Your deployed frontend URL
         ]
     }
 })
