@@ -11,11 +11,14 @@ genai.configure(api_key=api_key)
 
 # --- Text Analysis Function ---
 def analyze_content_with_gemini(text):
-
+    """
+    Analyzes text using the Gemini API and returns engagement suggestions.
+    """
     if not text or not text.strip():
         return "No text provided for analysis."
 
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    # CORRECTED MODEL NAME
+    model = genai.GenerativeModel('gemini-2.5-pro')
     
     prompt = f"""
     Analyze the following social media post text and provide actionable suggestions to improve its engagement. 
@@ -39,12 +42,14 @@ def analyze_content_with_gemini(text):
         print(f"An error occurred with the Gemini API: {e}")
         raise
 
-# Image Analysis Function
+# --- Image Analysis Function ---
 def analyze_image_with_gemini(file_stream, ocr_text=""):
+    """
+    Analyzes an image using the Gemini API and returns engagement suggestions.
+    """
     
-    #Analyzes an image using the Gemini API and returns engagement suggestions.
-    
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    # CORRECTED MODEL NAME
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     try:
         # Prepare the image for the API
@@ -67,4 +72,3 @@ def analyze_image_with_gemini(file_stream, ocr_text=""):
     except Exception as e:
         print(f"An error occurred with the Gemini API during image analysis: {e}")
         raise
-
